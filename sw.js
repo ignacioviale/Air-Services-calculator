@@ -1,6 +1,6 @@
 // Service worker: guarda la app en caché para que funcione sin conexión.
 // Subí VERSION cada vez que cambien los archivos para que los teléfonos descarguen la nueva versión.
-const VERSION = 'v2';
+const VERSION = 'v3';
 const CACHE = `servicio378-${VERSION}`;
 const ARCHIVOS = [
   './',
@@ -15,7 +15,12 @@ const ARCHIVOS = [
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE).then((c) => c.addAll(ARCHIVOS)).then(() => self.skipWaiting()));
+  // cache: 'reload' evita guardar copias viejas de la caché HTTP (GitHub Pages usa max-age=600).
+  event.waitUntil(
+    caches.open(CACHE)
+      .then((c) => c.addAll(ARCHIVOS.map((u) => new Request(u, { cache: 'reload' }))))
+      .then(() => self.skipWaiting()),
+  );
 });
 
 self.addEventListener('activate', (event) => {
