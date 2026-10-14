@@ -41,7 +41,6 @@ test('servicio legal con margen y descanso mínimo de 10 h', () => {
   assert.deepEqual(formatHora(r.servicio.limiteArribo), { hora: '21:00', dia: 0 });
   assert.equal(r.descanso.minimo, h(10));
   assert.equal(r.descanso.compania, h(12)); // resolución de la compañía
-  assert.deepEqual(formatHora(r.descanso.proximaPresentacionDecreto), { hora: '01:30', dia: 1 });
   assert.deepEqual(formatHora(r.descanso.proximaPresentacion), { hora: '03:30', dia: 1 });
 });
 
@@ -62,19 +61,19 @@ test('excede pero dentro del +20 % queda como excepción (Art. 24)', () => {
 test('excede el +20 % = fuera del decreto', () => {
   const r = evaluar({ rol: 'piloto', presentacion: '23:00', arribo: '11:00', pilotos: 2, segmentos: 3 });
   assert.equal(r.estado, 'ilegal');
-  assert.equal(r.descanso.minimo, h(12)); // descanso = duración del servicio
+  assert.equal(r.descanso.minimo, h(10));
 });
 
 test('Art. 13: traslado como pasajero suma para el descanso', () => {
   const r = evaluar({ rol: 'piloto', presentacion: '06:00', arribo: '16:00', trasladoFin: '18:00', pilotos: 2, segmentos: 2 });
-  assert.equal(r.descanso.minimo, h(12));
+  assert.equal(r.descanso.minimo, h(10));
   assert.deepEqual(formatHora(r.descanso.proximaPresentacion), { hora: '06:00', dia: 1 });
 });
 
 test('Art. 13: traslado que termina antes del arribo se toma del día siguiente y avisa', () => {
   const r = evaluar({ rol: 'piloto', presentacion: '07:00', arribo: '15:00', trasladoFin: '14:00', pilotos: 2, segmentos: 2 });
   assert.equal(r.descanso.desde - r.arribo, h(23));
-  assert.equal(r.descanso.minimo, h(31));
+  assert.equal(r.descanso.minimo, h(10));
   assert.ok(r.avisos.some((a) => a.includes('anterior al arribo')));
   const ok = evaluar({ rol: 'piloto', presentacion: '06:00', arribo: '16:00', trasladoFin: '18:00', pilotos: 2, segmentos: 2 });
   assert.equal(ok.avisos.length, 0);
@@ -106,7 +105,7 @@ test('TCP: Art. 18 y descanso compensatorio del Art. 19', () => {
   const r = evaluar({ rol: 'tcp', presentacion: '05:00', arribo: '20:00', tcpAdicionales: 0, asientos: 180 });
   assert.equal(r.servicio.max, h(14));
   assert.equal(r.servicio.estado, 'excepcion');
-  assert.equal(r.descanso.minimo, h(11));
+  assert.equal(r.descanso.minimo, h(10));
   assert.equal(r.descanso.compania, h(12));
   assert.equal(r.tcpMinimos, 4);
   assert.equal(evaluar({ rol: 'tcp', presentacion: '05:00', arribo: '20:00', tcpAdicionales: 1 }).estado, 'legal');

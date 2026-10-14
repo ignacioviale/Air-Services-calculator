@@ -189,33 +189,22 @@ export function evaluar(e) {
   }
 
   // --- Descanso mínimo ---
+  // Descanso fijo desde calzas (o fin del traslado): decreto 10 h, compañía 12 h.
   let finServicio = arribo;
-  let computoDescanso = duracion;
   if (esPiloto && e.trasladoFin) {
     const tf = parseHora(e.trasladoFin);
     if (tf !== null) {
       finServicio = siguienteOcurrencia(tf, arribo, false);
-      computoDescanso = finServicio - pres; // Art. 13: el traslado se suma al servicio para el descanso.
       if (tf < arrHora) {
         res.avisos.push(`El fin del traslado (${e.trasladoFin}) es anterior al arribo (${e.arribo}): se tomó como del día siguiente, ${formatDuracion(finServicio - arribo)} h de traslado. Revisá los datos.`);
       }
     }
   }
-  let descanso;
-  if (esPiloto) {
-    descanso = Math.max(DESCANSO_MINIMO, computoDescanso); // Art. 15
-  } else {
-    const exceso = Math.max(0, duracion - maxMin);
-    descanso = DESCANSO_MINIMO + exceso; // Art. 19
-  }
-  const descansoCompania = Math.max(descanso, DESCANSO_COMPANIA);
   res.descanso = {
-    minimo: descanso,
-    compania: descansoCompania,
+    minimo: DESCANSO_MINIMO,
+    compania: DESCANSO_COMPANIA,
     desde: finServicio,
-    proximaPresentacion: finServicio + descansoCompania,
-    proximaPresentacionDecreto: finServicio + descanso,
-    fuente: esPiloto ? (finServicio !== arribo ? 'Arts. 13 y 15' : 'Art. 15') : 'Art. 19',
+    proximaPresentacion: finServicio + DESCANSO_COMPANIA,
   };
 
   // --- Acumulados (pilotos) ---

@@ -109,9 +109,9 @@ function render(r, datos) {
   html += `<div class="card">
     <h2>Descanso mínimo</h2>
     <div class="grid">
-      <div><span>Compañía · mín. 12 h</span><b>${dur(d.compania)}</b></div>
-      <div><span>Decreto · ${d.fuente}</span><b>${dur(d.minimo)}</b></div>
-      <div><span>Desde</span><b>${hora(d.desde)}</b></div>
+      <div><span>Descanso por compañía</span><b>${dur(d.compania)}</b></div>
+      <div><span>Descanso por decreto</span><b>${dur(d.minimo)}</b></div>
+      <div><span>Fin de servicio (calzas)</span><b>${hora(d.desde)}</b></div>
       <div><span>Próxima presentación</span><b>${hora(d.proximaPresentacion)}</b></div>
     </div>
     <p class="note">Por Decreto: descanso mínimo desde calzas puestas: 10 hs.</p>
