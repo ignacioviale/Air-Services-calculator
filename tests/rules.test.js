@@ -40,7 +40,9 @@ test('servicio legal con margen y descanso mínimo de 10 h', () => {
   assert.equal(r.servicio.margen, h(5.5));
   assert.deepEqual(formatHora(r.servicio.limiteArribo), { hora: '21:00', dia: 0 });
   assert.equal(r.descanso.minimo, h(10));
-  assert.deepEqual(formatHora(r.descanso.proximaPresentacion), { hora: '01:30', dia: 1 });
+  assert.equal(r.descanso.compania, h(12)); // resolución de la compañía
+  assert.deepEqual(formatHora(r.descanso.proximaPresentacionDecreto), { hora: '01:30', dia: 1 });
+  assert.deepEqual(formatHora(r.descanso.proximaPresentacion), { hora: '03:30', dia: 1 });
 });
 
 test('arribo después de medianoche cruza de día', () => {
@@ -90,6 +92,7 @@ test('TCP: Art. 18 y descanso compensatorio del Art. 19', () => {
   assert.equal(r.servicio.max, h(14));
   assert.equal(r.servicio.estado, 'excepcion');
   assert.equal(r.descanso.minimo, h(11));
+  assert.equal(r.descanso.compania, h(12));
   assert.equal(r.tcpMinimos, 4);
   assert.equal(evaluar({ rol: 'tcp', presentacion: '05:00', arribo: '20:00', tcpAdicionales: 1 }).estado, 'legal');
 });

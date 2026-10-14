@@ -36,6 +36,7 @@ export const ART11 = [
 ];
 
 export const DESCANSO_MINIMO = 10 * H; // Arts. 15 y 19
+export const DESCANSO_COMPANIA = 12 * H; // Resolución de la compañía (no modifica el decreto)
 export const EXCEPCION_24H = 0.2; // Art. 24
 export const EXCEPCION_MES = 0.1; // Art. 24
 export const LIMITE_MES = 120; // Art. 8 b)
@@ -204,10 +205,13 @@ export function evaluar(e) {
     const exceso = Math.max(0, duracion - maxMin);
     descanso = DESCANSO_MINIMO + exceso; // Art. 19
   }
+  const descansoCompania = Math.max(descanso, DESCANSO_COMPANIA);
   res.descanso = {
     minimo: descanso,
+    compania: descansoCompania,
     desde: finServicio,
-    proximaPresentacion: finServicio + descanso,
+    proximaPresentacion: finServicio + descansoCompania,
+    proximaPresentacionDecreto: finServicio + descanso,
     fuente: esPiloto ? (finServicio !== arribo ? 'Arts. 13 y 15' : 'Art. 15') : 'Art. 19',
   };
 
