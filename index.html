@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Servicio 378</title>
+  <meta name="description" content="Calculadora offline de tiempos de vuelo, servicio y descanso según el Decreto 378/2025.">
+  <meta name="theme-color" content="#0b2545">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Servicio 378">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <h1>Servicio 378</h1>
+    <p class="sub">Decreto 378/2025 · Transporte regular</p>
+  </header>
+
+  <main>
+    <form id="form" autocomplete="off" onsubmit="return false">
+      <div class="seg" role="radiogroup" aria-label="Rol">
+        <label><input type="radio" name="rol" value="piloto" checked><span>Piloto</span></label>
+        <label><input type="radio" name="rol" value="tcp"><span>Tripulante de cabina</span></label>
+      </div>
+
+      <div class="times">
+        <div class="field">
+          <label for="presentacion">Presentación</label>
+          <input type="time" id="presentacion" name="presentacion" required>
+          <button type="button" class="now" data-target="presentacion">Ahora</button>
+        </div>
+        <div class="field">
+          <label for="arribo">Último arribo (calzos)</label>
+          <input type="time" id="arribo" name="arribo" required>
+          <button type="button" class="now" data-target="arribo">Ahora</button>
+        </div>
+      </div>
+      <p class="hint">Hora local donde estás aclimatado. Si el arribo es anterior a la presentación, se toma como el día siguiente.</p>
+
+      <div class="only-piloto">
+        <span class="lbl">Tripulación de vuelo</span>
+        <div class="seg" role="radiogroup" aria-label="Pilotos">
+          <label><input type="radio" name="pilotos" value="2" checked><span>Mínima</span></label>
+          <label><input type="radio" name="pilotos" value="3"><span>3 pilotos</span></label>
+          <label><input type="radio" name="pilotos" value="4"><span>4 pilotos</span></label>
+        </div>
+
+        <div class="only-minima">
+          <span class="lbl">Segmentos</span>
+          <div class="stepper">
+            <button type="button" data-step="-1" aria-label="Menos segmentos">−</button>
+            <output id="segmentosOut">1</output>
+            <button type="button" data-step="1" aria-label="Más segmentos">+</button>
+            <input type="hidden" id="segmentos" name="segmentos" value="1">
+          </div>
+        </div>
+
+        <div class="only-aumentada">
+          <span class="lbl">Descanso a bordo</span>
+          <div class="seg" role="radiogroup" aria-label="Clase de descanso">
+            <label><input type="radio" name="claseDescanso" value="1" checked><span>Clase 1<small>litera</small></span></label>
+            <label><input type="radio" name="claseDescanso" value="2"><span>Clase 2<small>plano</small></span></label>
+            <label><input type="radio" name="claseDescanso" value="3"><span>Clase 3<small>≥ 40°</small></span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="only-tcp">
+        <span class="lbl">TCP adicionales al mínimo</span>
+        <div class="seg" role="radiogroup" aria-label="TCP adicionales">
+          <label><input type="radio" name="tcpAdicionales" value="0" checked><span>Ninguno</span></label>
+          <label><input type="radio" name="tcpAdicionales" value="1"><span>+1</span></label>
+          <label><input type="radio" name="tcpAdicionales" value="2"><span>+2</span></label>
+        </div>
+      </div>
+
+      <details class="more">
+        <summary>Más datos (opcional)</summary>
+        <div class="only-piloto">
+          <div class="field">
+            <label for="tiempoVuelo">Tiempo de vuelo del servicio (h)</label>
+            <input type="number" inputmode="decimal" step="0.1" min="0" id="tiempoVuelo" name="tiempoVuelo" placeholder="ej. 7.5">
+          </div>
+          <div class="field">
+            <label for="trasladoFin">Fin de traslado como pasajero (Art. 13)</label>
+            <input type="time" id="trasladoFin" name="trasladoFin">
+          </div>
+          <div class="field">
+            <label for="horasMes">Horas de vuelo del mes, con este servicio</label>
+            <input type="number" inputmode="decimal" step="0.1" min="0" id="horasMes" name="horasMes" placeholder="máx. 120">
+          </div>
+          <div class="field">
+            <label for="horasAnio">Horas de vuelo del año, con este servicio</label>
+            <input type="number" inputmode="decimal" step="0.1" min="0" id="horasAnio" name="horasAnio" placeholder="máx. 1000">
+          </div>
+        </div>
+        <div class="only-tcp">
+          <div class="field">
+            <label for="asientos">Asientos aprobados del avión</label>
+            <input type="number" inputmode="numeric" min="0" id="asientos" name="asientos" placeholder="ej. 186">
+          </div>
+        </div>
+        <button type="button" id="limpiar" class="link">Borrar datos opcionales</button>
+      </details>
+    </form>
+
+    <section id="resultado" aria-live="polite"></section>
+
+    <details class="notes">
+      <summary>Recordatorios del decreto</summary>
+      <ul>
+        <li>Si el explotador tiene un sistema de gestión de fatiga (FRMS) propio, rigen sus límites y no los de esta calculadora (Art. 6).</li>
+        <li>El tiempo de servicio empieza en la presentación y termina con la aeronave estacionada después del último vuelo. El traslado personal no cuenta.</li>
+        <li>Viajar como pasajero por orden del explotador es tiempo de servicio, pero no cuenta como segmento.</li>
+        <li>Antes de una reserva o un servicio, tenés que tener al menos 30 h de descanso en cada período de 168 h (Art. 15).</li>
+        <li>Vacaciones: al menos 15 días consecutivos por año (Art. 16).</li>
+        <li>Tenés que estar aclimatado al horario local antes del próximo turno. Si cruzaste más de 60° de longitud, corresponde descanso compensatorio (Art. 17).</li>
+        <li>Las excepciones (+20 % en 24 h, +10 % en el mes) solo valen por circunstancias imprevistas, emergencias, búsqueda y salvamento o defensa (Art. 25), y el comandante tiene que hacer un informe (Art. 26).</li>
+        <li>Tripulante de cabina: 1 por cada 50 asientos o fracción en aviones de más de 19 pasajeros (Art. 18).</li>
+        <li>Esta calculadora cubre el transporte regular (Título IV). En el no regular, los pilotos tienen 1.400 h por año, 500 h por trimestre y 8 h (1 piloto) o 10 h (2 pilotos) cada 24 h (Art. 20).</li>
+      </ul>
+      <p class="disclaimer">Herramienta de referencia. No reemplaza al decreto ni a las normas de tu explotador.</p>
+    </details>
+  </main>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
