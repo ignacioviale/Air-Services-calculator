@@ -114,10 +114,8 @@ function render(r, datos) {
       <div><span>Desde</span><b>${hora(d.desde)}</b></div>
       <div><span>Próxima presentación</span><b>${hora(d.proximaPresentacion)}</b></div>
     </div>
-    <p class="note">${esPiloto
-      ? 'El descanso es igual a la duración del servicio, con un mínimo de 12 h consecutivas.'
-      : 'Mínimo 12 h consecutivas. Si se excedió el servicio, se toma el mayor entre 12 h y lo que pide el decreto con el exceso.'}${d.compania > d.minimo ? ` Con el decreto solo, la próxima presentación sería ${hora(d.proximaPresentacionDecreto)}.` : ''}</p>
-    <p class="note">Las 12 h son una resolución de la compañía para tripulantes de cabina y de mando, no una modificación del decreto (el decreto pide 10 h).</p>
+    <p class="note">Por Decreto: descanso mínimo desde calzas puestas: 10 hs.</p>
+    <p class="note">Por Compañía: descanso mínimo desde calzas puestas: 12 hs.</p>
   </div>`;
 
   if (esPiloto && r.acumulados && (r.acumulados.mes || r.acumulados.anio)) {
