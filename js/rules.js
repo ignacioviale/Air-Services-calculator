@@ -137,7 +137,7 @@ export function maxServicioTcp(adicionales) {
 export function evaluar(e) {
   const pres = parseHora(e.presentacion);
   const arrHora = parseHora(e.arribo);
-  if (pres === null || arrHora === null) {
+  if (pres === null || arrHora === null || pres === arrHora) {
     return { error: 'Ingresá la hora de presentación y la del último arribo.' };
   }
 
@@ -196,6 +196,9 @@ export function evaluar(e) {
     if (tf !== null) {
       finServicio = siguienteOcurrencia(tf, arribo, false);
       computoDescanso = finServicio - pres; // Art. 13: el traslado se suma al servicio para el descanso.
+      if (tf < arrHora) {
+        res.avisos.push(`El fin del traslado (${e.trasladoFin}) es anterior al arribo (${e.arribo}): se tomó como del día siguiente, ${formatDuracion(finServicio - arribo)} h de traslado. Revisá los datos.`);
+      }
     }
   }
   let descanso;
