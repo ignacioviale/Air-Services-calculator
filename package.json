@@ -1,0 +1,11 @@
+{
+  "name": "air-services-calculator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Calculadora offline de tiempos de vuelo, servicio y descanso según el Decreto 378/2025.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "start": "python3 -m http.server 8080"
+  }
+}
