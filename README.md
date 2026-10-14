@@ -33,6 +33,9 @@ Las reglas están en `js/rules.js` y tienen tests en `tests/`.
 - Extensión del Art. 12 con 4 pilotos (19 h de vuelo): solo con descanso clase 1.
 - Pilotos: descanso = duración del servicio, con mínimo de 10 h. Si hay un
   traslado del Art. 13, se suma y el descanso corre desde el fin del traslado.
+- Compañía: descanso mínimo de 12 h para cabina y mando (resolución de la
+  compañía, no del decreto). La próxima presentación usa el mayor entre ese
+  mínimo y el del decreto.
 
 ## Instalar en el iPhone
 

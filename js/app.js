@@ -109,13 +109,15 @@ function render(r, datos) {
   html += `<div class="card">
     <h2>Descanso mínimo</h2>
     <div class="grid">
-      <div><span>Duración · ${d.fuente}</span><b>${dur(d.minimo)}</b></div>
+      <div><span>Compañía · mín. 12 h</span><b>${dur(d.compania)}</b></div>
+      <div><span>Decreto · ${d.fuente}</span><b>${dur(d.minimo)}</b></div>
       <div><span>Desde</span><b>${hora(d.desde)}</b></div>
-      <div class="wide"><span>Próxima presentación, como muy temprano</span><b>${hora(d.proximaPresentacion)}</b></div>
+      <div><span>Próxima presentación</span><b>${hora(d.proximaPresentacion)}</b></div>
     </div>
-    <p class="note">${esPiloto
-      ? 'El descanso es igual a la duración del servicio, con un mínimo de 10 h consecutivas.'
-      : 'Mínimo 10 h consecutivas. Si se excedió el servicio, se suma un descanso igual al exceso.'}</p>
+    <p class="note">La compañía fija un descanso mínimo de 12 h para tripulantes de cabina y de mando. Es una resolución de la compañía, no una modificación del decreto. La próxima presentación se calcula con el mayor de los dos${d.compania > d.minimo ? ` (con el decreto solo, sería ${hora(d.proximaPresentacionDecreto)})` : ''}.</p>
+    <p class="note">Decreto: ${esPiloto
+      ? 'el descanso es igual a la duración del servicio, con un mínimo de 10 h consecutivas.'
+      : 'mínimo 10 h consecutivas. Si se excedió el servicio, se suma un descanso igual al exceso.'}</p>
   </div>`;
 
   if (esPiloto && r.acumulados && (r.acumulados.mes || r.acumulados.anio)) {
