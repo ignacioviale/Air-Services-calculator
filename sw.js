@@ -1,6 +1,6 @@
 // Service worker: guarda la app en caché para que funcione sin conexión.
 // Subí VERSION cada vez que cambien los archivos para que los teléfonos descarguen la nueva versión.
-const VERSION = 'v6';
+const VERSION = 'v7';
 const CACHE = `servicio378-${VERSION}`;
 const ARCHIVOS = [
   './',
