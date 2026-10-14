@@ -71,6 +71,21 @@ test('Art. 13: traslado como pasajero suma para el descanso', () => {
   assert.deepEqual(formatHora(r.descanso.proximaPresentacion), { hora: '06:00', dia: 1 });
 });
 
+test('Art. 13: traslado que termina antes del arribo se toma del día siguiente y avisa', () => {
+  const r = evaluar({ rol: 'piloto', presentacion: '07:00', arribo: '15:00', trasladoFin: '14:00', pilotos: 2, segmentos: 2 });
+  assert.equal(r.descanso.desde - r.arribo, h(23));
+  assert.equal(r.descanso.minimo, h(31));
+  assert.ok(r.avisos.some((a) => a.includes('anterior al arribo')));
+  const ok = evaluar({ rol: 'piloto', presentacion: '06:00', arribo: '16:00', trasladoFin: '18:00', pilotos: 2, segmentos: 2 });
+  assert.equal(ok.avisos.length, 0);
+});
+
+test('presentación igual al arribo = datos incompletos', () => {
+  const r = evaluar({ rol: 'piloto', presentacion: '08:00', arribo: '08:00', pilotos: 2, segmentos: 2 });
+  assert.ok(r.error);
+  assert.equal(r.servicio, undefined);
+});
+
 test('tiempo de vuelo usando la extensión del Art. 12', () => {
   const r = evaluar({ rol: 'piloto', presentacion: '08:00', arribo: '01:00', pilotos: 4, claseDescanso: 1, tiempoVuelo: 15 });
   assert.equal(r.vuelo.estado, 'legal');
