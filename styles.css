@@ -239,3 +239,17 @@ details .only-piloto, details .only-tcp { gap: 0; }
 .notes ul { margin: 0 0 8px; padding-left: 18px; font-size: 14px; }
 .notes li { margin-bottom: 6px; }
 .disclaimer { font-size: 12px; color: var(--muted); }
+
+.restante {
+  margin-top: 14px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  text-align: center;
+}
+.restante span { display: block; font-size: 14px; font-weight: 600; }
+.restante b { display: block; font-size: 34px; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; line-height: 1.15; }
+.restante b small { font-size: 16px; font-weight: 600; }
+.restante.legal { background: var(--ok-bg); color: var(--ok); }
+.restante.excepcion { background: var(--exc-bg); color: var(--exc); }
+.restante.ilegal { background: var(--bad-bg); color: var(--bad); }
+.note.center { text-align: center; }

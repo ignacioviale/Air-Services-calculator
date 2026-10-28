@@ -75,20 +75,24 @@ function render(r, datos) {
   let html = `<div class="banner ${r.estado}"><span class="big">${et.icono}</span><div><strong>${et.texto}</strong>
     <div class="banner-sub">Servicio ${formatDuracion(s.duracion)} h de ${formatDuracion(s.max)} h (${s.fuente})</div></div></div>`;
 
-  const margenTxt = s.margen >= 0
-    ? `Te quedan <strong>${formatDuracion(s.margen)} h</strong>`
-    : `Te pasaste por <strong>${formatDuracion(-s.margen)} h</strong>`;
+  const restante = s.margen >= 0
+    ? { titulo: 'Tiempo de servicio restante', valor: s.margen }
+    : { titulo: 'Tiempo de servicio excedido', valor: -s.margen };
 
   html += `<div class="card">
     <h2>${chip(s.estado)} Tiempo de servicio de vuelo</h2>
     <div class="grid">
-      <div><span>Duración</span><b>${dur(s.duracion)}</b></div>
-      <div><span>Máximo · ${s.fuente}</span><b>${dur(s.max)}</b></div>
-      <div><span>Arribo límite</span><b>${hora(s.limiteArribo)}</b></div>
-      <div><span>Límite con excepción +20 %</span><b>${hora(s.limiteArriboExcepcion)}</b></div>
+      <div><span>Tiempo de servicio</span><b>${dur(s.duracion)}</b></div>
+      <div><span>Tiempo máximo permitido</span><b>${dur(s.max)}<small> · ${s.fuente}</small></b></div>
+      <div><span>Último arribo permitido</span><b>${hora(s.limiteArribo)}</b></div>
+      <div><span>Último arribo con +20 %</span><b>${hora(s.limiteArriboExcepcion)}</b></div>
     </div>
     ${barra(s.duracion, s.max, s.maxExcepcion)}
-    <p class="note">${margenTxt}. Con excepción, el máximo es ${formatDuracion(s.maxExcepcion)} h.</p>
+    <div class="restante ${s.estado}">
+      <span>${restante.titulo}</span>
+      <b>${formatDuracion(restante.valor)}<small> h</small></b>
+    </div>
+    <p class="note center">Con excepción +20 %, el máximo es ${formatDuracion(s.maxExcepcion)} h.</p>
   </div>`;
 
   if (esPiloto && r.vuelo) {
