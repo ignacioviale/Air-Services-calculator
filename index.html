@@ -15,7 +15,10 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="styles.css">
   <script>
-    try { const t = localStorage.getItem('tema'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch {}
+    // Modo oscuro por defecto; si el usuario eligió claro, se respeta.
+    let tema = 'dark';
+    try { if (localStorage.getItem('tema') === 'light') tema = 'light'; } catch {}
+    document.documentElement.dataset.theme = tema;
   </script>
 </head>
 <body>

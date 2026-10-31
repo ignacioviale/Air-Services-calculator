@@ -210,11 +210,10 @@ form.querySelectorAll('[data-step]').forEach((b) => {
   });
 });
 
-// Botón de modo claro / oscuro. Sin elección guardada, sigue al sistema.
+// Botón de modo claro / oscuro. Sin elección guardada, arranca en oscuro (lo fija index.html).
 const botonTema = document.getElementById('tema');
-const sistemaOscuro = window.matchMedia('(prefers-color-scheme: dark)');
 function temaActual() {
-  return document.documentElement.dataset.theme || (sistemaOscuro.matches ? 'dark' : 'light');
+  return document.documentElement.dataset.theme || 'dark';
 }
 function pintarBotonTema() {
   const oscuro = temaActual() === 'dark';
@@ -227,7 +226,6 @@ botonTema.addEventListener('click', () => {
   try { localStorage.setItem('tema', nuevo); } catch { /* sin almacenamiento */ }
   pintarBotonTema();
 });
-sistemaOscuro.addEventListener('change', pintarBotonTema);
 pintarBotonTema();
 
 restaurar();
