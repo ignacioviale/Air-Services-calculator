@@ -120,11 +120,10 @@ test('datos incompletos devuelven error', () => {
   assert.ok(evaluar({ rol: 'piloto', presentacion: '', arribo: '10:00' }).error);
 });
 
-test('último despegue: block time calzo a calzo con 10 min de taxi out e in', () => {
+test('último despegue: despegue + 10 min + block time + 10 min = último arribo permitido', () => {
   const r = evaluar({ rol: 'piloto', presentacion: '06:00', arribo: '10:00', pilotos: 2, segmentos: 1 });
   const u = ultimoDespegue(r.servicio.limiteArribo, h(2.5));
   assert.deepEqual(formatHora(u.arribo), { hora: '19:00', dia: 0 });
-  assert.deepEqual(formatHora(u.salidaCalzos), { hora: '16:30', dia: 0 });
-  assert.deepEqual(formatHora(u.despegue), { hora: '16:40', dia: 0 });
-  assert.deepEqual(formatHora(u.aterrizaje), { hora: '18:50', dia: 0 });
+  assert.equal(u.total, h(2.5) + 20);
+  assert.deepEqual(formatHora(u.despegue), { hora: '16:10', dia: 0 });
 });
