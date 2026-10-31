@@ -180,12 +180,32 @@ function renderVuelo(r, datos) {
     ${avisos.map((a) => `<p class="note aviso">${a}</p>`).join('')}`;
 }
 
-function actualizar() {
+// Cuenta una "consulta" en GoatCounter cuando el usuario carga datos y obtiene un resultado.
+// Espera 3 s sin cambios y no repite la misma presentación/arribo en la sesión.
+const consultasContadas = new Set();
+let timerConsulta = null;
+function contarConsulta(datos, r) {
+  clearTimeout(timerConsulta);
+  if (r.error) return;
+  const clave = `${datos.rol}|${datos.presentacion}|${datos.arribo}`;
+  if (consultasContadas.has(clave)) return;
+  timerConsulta = setTimeout(() => {
+    if (!window.goatcounter || typeof window.goatcounter.count !== 'function') return;
+    consultasContadas.add(clave);
+    try {
+      window.goatcounter.count({ path: 'consulta', title: 'Consulta de servicio', event: true });
+    } catch { /* sin conexión o bloqueado */ }
+  }, 3000);
+}
+
+function actualizar(evento) {
   const datos = leerFormulario();
   document.body.dataset.rol = datos.rol;
   document.body.dataset.tripulacion = datos.pilotos >= 3 ? 'aumentada' : 'minima';
   guardar(datos);
-  render(evaluar(datos), datos);
+  const r = evaluar(datos);
+  render(r, datos);
+  if (evento) contarConsulta(datos, r);
 }
 
 form.addEventListener('input', actualizar);
@@ -197,7 +217,7 @@ form.querySelectorAll('button.now').forEach((b) => {
     const ahora = new Date();
     document.getElementById(b.dataset.target).value =
       `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`;
-    actualizar();
+    actualizar(true);
   });
 });
 
@@ -206,7 +226,7 @@ form.querySelectorAll('[data-step]').forEach((b) => {
     const n = Math.min(7, Math.max(1, Number(segmentosInput.value) + Number(b.dataset.step)));
     segmentosInput.value = n;
     segmentosOut.textContent = n === 7 ? '7+' : n;
-    actualizar();
+    actualizar(true);
   });
 });
 

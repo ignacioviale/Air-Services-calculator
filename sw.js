@@ -1,6 +1,6 @@
 // Service worker: guarda la app en caché para que funcione sin conexión.
 // Subí VERSION cada vez que cambien los archivos para que los teléfonos descarguen la nueva versión.
-const VERSION = 'v22';
+const VERSION = 'v23';
 const CACHE = `servicio378-${VERSION}`;
 const ARCHIVOS = [
   './',
@@ -33,6 +33,8 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+  // Solo la app propia sale de la caché; el contador externo va directo a la red.
+  if (new URL(event.request.url).origin !== self.location.origin) return;
   event.respondWith(
     caches.match(event.request, { ignoreSearch: true }).then((cached) => cached || fetch(event.request)),
   );
