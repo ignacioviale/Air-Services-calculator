@@ -49,7 +49,7 @@ El workflow `.github/workflows/pages.yml` corre los tests y publica cada push a 
    **Source: GitHub Actions**.
 2. GitHub Pages en repos **privados** requiere un plan pago. Si no lo tenés,
    hacé el repo público: no contiene datos sensibles.
-3. La app queda en `https://<usuario>.github.io/air-services-calculator/`.
+3. La app queda en `https://tiempo-de-vuelo.github.io/`.
 
 Cuando cambies archivos, subí `VERSION` en `sw.js` para que los teléfonos
 descarguen la versión nueva.
