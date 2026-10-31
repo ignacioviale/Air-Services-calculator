@@ -210,6 +210,26 @@ form.querySelectorAll('[data-step]').forEach((b) => {
   });
 });
 
+// Botón de modo claro / oscuro. Sin elección guardada, sigue al sistema.
+const botonTema = document.getElementById('tema');
+const sistemaOscuro = window.matchMedia('(prefers-color-scheme: dark)');
+function temaActual() {
+  return document.documentElement.dataset.theme || (sistemaOscuro.matches ? 'dark' : 'light');
+}
+function pintarBotonTema() {
+  const oscuro = temaActual() === 'dark';
+  botonTema.classList.toggle('oscuro', oscuro);
+  botonTema.setAttribute('aria-label', oscuro ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
+}
+botonTema.addEventListener('click', () => {
+  const nuevo = temaActual() === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = nuevo;
+  try { localStorage.setItem('tema', nuevo); } catch { /* sin almacenamiento */ }
+  pintarBotonTema();
+});
+sistemaOscuro.addEventListener('change', pintarBotonTema);
+pintarBotonTema();
+
 restaurar();
 if (segmentosInput.value === '7') segmentosOut.textContent = '7+';
 actualizar();

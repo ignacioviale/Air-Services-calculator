@@ -16,8 +16,9 @@
   color-scheme: light;
 }
 
+/* Modo oscuro: sigue al sistema salvo que el usuario elija claro u oscuro con el botón. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #0b1220;
     --card: #141d2f;
     --text: #e8edf6;
@@ -35,6 +36,23 @@
   }
 }
 
+:root[data-theme="dark"] {
+  --bg: #0b1220;
+  --card: #141d2f;
+  --text: #e8edf6;
+  --muted: #9aa7bd;
+  --line: #26324a;
+  --accent: #8fb4ff;
+  --accent-soft: #1d2a45;
+  --ok: #5fd39a;
+  --ok-bg: #0f3324;
+  --exc: #ffc061;
+  --exc-bg: #3a2a0c;
+  --bad: #ff8a80;
+  --bad-bg: #3d1513;
+  color-scheme: dark;
+}
+
 * { box-sizing: border-box; }
 
 html { -webkit-text-size-adjust: 100%; }
@@ -48,9 +66,28 @@ body {
 }
 
 .top {
-  padding: 18px 16px 6px;
+  position: relative;
+  padding: 18px 56px 6px;
   text-align: center;
 }
+.tema {
+  position: absolute;
+  top: 14px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+}
+.tema svg { width: 20px; height: 20px; }
+.tema .sol { display: none; }
+.tema.oscuro .sol { display: block; }
+.tema.oscuro .luna { display: none; }
 .top h1 { margin: 0; font-size: 24px; line-height: 1.25; font-weight: 800; letter-spacing: -0.01em; text-wrap: balance; }
 .sub { margin: 4px 0 0; color: var(--muted); font-size: 14px; font-weight: 500; }
 
@@ -192,7 +229,8 @@ body[data-tripulacion="aumentada"] .only-minima { display: none; }
 .banner.excepcion .big { background: var(--exc); }
 .banner.ilegal { background: var(--bad-bg); color: var(--bad); }
 .banner.ilegal .big { background: var(--bad); }
-@media (prefers-color-scheme: dark) { .banner .big { color: var(--bg); } }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .banner .big { color: var(--bg); } }
+:root[data-theme="dark"] .banner .big { color: var(--bg); }
 
 .card {
   background: var(--card);
@@ -226,7 +264,8 @@ body[data-tripulacion="aumentada"] .only-minima { display: none; }
 .chip.legal { background: var(--ok); }
 .chip.excepcion { background: var(--exc); }
 .chip.ilegal { background: var(--bad); }
-@media (prefers-color-scheme: dark) { .chip { color: var(--bg); } }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .chip { color: var(--bg); } }
+:root[data-theme="dark"] .chip { color: var(--bg); }
 
 .bar { position: relative; height: 10px; margin-top: 12px; background: var(--accent-soft); border-radius: 5px; }
 .bar .fill { height: 100%; background: var(--accent); border-radius: 5px; }
