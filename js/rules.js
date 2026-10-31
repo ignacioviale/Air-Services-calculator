@@ -113,6 +113,22 @@ export function maxVueloPiloto({ presentacion, pilotos, claseDescanso }) {
   return { horas: buscarFila(ART9_MINIMA, presentacion).max, fuente: 'Art. 9 a)' };
 }
 
+export const TAXI_OUT = 10; // minutos incluidos en el block time
+export const TAXI_IN = 10;
+
+// Último despegue para llegar a calzos dentro del límite de servicio.
+// `limiteArribo` en minutos absolutos; `block` = block time (calzo a calzo) en minutos,
+// que ya incluye TAXI_OUT y TAXI_IN.
+export function ultimoDespegue(limiteArribo, block) {
+  const salidaCalzos = limiteArribo - block;
+  return {
+    salidaCalzos,
+    despegue: salidaCalzos + TAXI_OUT,
+    aterrizaje: limiteArribo - TAXI_IN,
+    arribo: limiteArribo,
+  };
+}
+
 export function maxServicioTcp(adicionales) {
   const n = Math.min(Math.max(adicionales || 0, 0), 2);
   return { horas: [14, 16, 18][n], fuente: 'Art. 18' };

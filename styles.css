@@ -163,7 +163,8 @@ body[data-tripulacion="minima"] .only-aumentada,
 body[data-tripulacion="aumentada"] .only-minima { display: none; }
 .only-piloto, .only-tcp { display: grid; gap: 12px; }
 
-#resultado { display: grid; gap: 12px; margin: 18px 0; }
+.resultado { display: grid; gap: 12px; margin: 18px 0; }
+.resultado:empty { display: none; }
 
 .banner {
   display: flex;
@@ -250,3 +251,28 @@ body[data-tripulacion="aumentada"] .only-minima { display: none; }
 .restante.excepcion { background: var(--exc-bg); color: var(--exc); }
 .restante.ilegal { background: var(--bad-bg); color: var(--bad); }
 .note.center { text-align: center; }
+
+.tv { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.tv h2 { margin: 0; }
+.tv b { font-size: 24px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.tv b small { font-size: 13px; font-weight: 500; color: var(--muted); }
+.sep { border: 0; border-top: 1px solid var(--line); margin: 14px 0; }
+.hm { display: flex; align-items: center; gap: 6px; }
+.hm input {
+  width: 100%;
+  min-height: 48px;
+  font: inherit;
+  font-size: 22px;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--text);
+  -webkit-appearance: none;
+  appearance: none;
+}
+.hm span { font-size: 22px; font-weight: 700; }
+#vueloSeccion .grid { margin-top: 12px; }
+.note.aviso { color: var(--bad); font-weight: 600; }
+#vueloSeccion[hidden] { display: none; }

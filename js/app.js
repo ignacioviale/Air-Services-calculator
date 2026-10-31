@@ -1,8 +1,14 @@
-import { evaluar, formatHora, formatDuracion } from './rules.js';
+import { evaluar, formatHora, formatDuracion, ultimoDespegue } from './rules.js';
 
 const STORAGE_KEY = 'servicio378:v1';
 const form = document.getElementById('form');
 const salida = document.getElementById('resultado');
+const salida2 = document.getElementById('resultado2');
+const vueloSeccion = document.getElementById('vueloSeccion');
+const vueloChip = document.getElementById('vueloChip');
+const vueloMax = document.getElementById('vueloMax');
+const vueloNotas = document.getElementById('vueloNotas');
+const despegueOut = document.getElementById('despegueOut');
 const segmentosInput = document.getElementById('segmentos');
 const segmentosOut = document.getElementById('segmentosOut');
 
@@ -67,6 +73,8 @@ function barra(valor, max, maxExc) {
 function render(r, datos) {
   if (r.error) {
     salida.innerHTML = `<div class="empty">${r.error}</div>`;
+    salida2.innerHTML = '';
+    vueloSeccion.hidden = true;
     return;
   }
   const s = r.servicio;
@@ -95,18 +103,10 @@ function render(r, datos) {
     <p class="note center">Con excepción +20 %, el máximo es ${formatDuracion(s.maxExcepcion)} h.</p>
   </div>`;
 
-  if (esPiloto && r.vuelo) {
-    const v = r.vuelo;
-    const maxTxt = v.extendido ? `${v.horas} h · hasta ${v.extendido} h (${v.fuenteExtendido})` : `${v.horas} h`;
-    html += `<div class="card">
-      <h2>${v.estado ? chip(v.estado) : ''} Tiempo de vuelo</h2>
-      <div class="grid">
-        <div><span>Máximo · ${v.fuente}</span><b class="sm">${maxTxt}</b></div>
-      </div>
-      ${v.usaExtension ? `<p class="note">Usás la extensión del Art. 12: ${datos.pilotos === 3 ? 'hace falta un asiento reclinable de más de 40° en un área separada' : 'hace falta un espacio horizontal separado de los pasajeros'}.</p>` : ''}
-      ${v.extendido && datos.pilotos === 3 ? '<p class="note">Ojo: el servicio máximo del Art. 11 puede ser menor que la extensión del Art. 12. Manda el servicio.</p>' : ''}
-    </div>`;
-  }
+  salida.innerHTML = html;
+  html = '';
+  vueloSeccion.hidden = !esPiloto;
+  if (esPiloto) renderVuelo(r, datos);
 
   const d = r.descanso;
   html += `<div class="card">
@@ -128,7 +128,56 @@ function render(r, datos) {
     html += `<div class="card warn">${r.avisos.map((a) => `<p>${a}</p>`).join('')}</div>`;
   }
 
-  salida.innerHTML = html;
+  salida2.innerHTML = html;
+}
+
+function leerBlock(datos) {
+  const hh = datos.blockH === '' || datos.blockH == null ? null : Number(datos.blockH);
+  const mm = datos.blockM === '' || datos.blockM == null ? null : Number(datos.blockM);
+  if (hh === null && mm === null) return null;
+  const total = (hh || 0) * 60 + (mm || 0);
+  return Number.isFinite(total) && total > 0 ? total : null;
+}
+
+function renderVuelo(r, datos) {
+  const v = r.vuelo;
+  const s = r.servicio;
+  const tope = (v.extendido ?? v.horas) * 60;
+  vueloMax.innerHTML = `${formatDuracion(v.horas * 60)}<small> h</small>`;
+  const notas = [`Máximo por ${v.fuente} del decreto.`];
+  if (v.extendido) notas.push(`Hasta ${v.extendido} h con la extensión del ${v.fuenteExtendido}.`);
+  if (v.extendido && datos.pilotos === 3) notas.push('El servicio máximo del Art. 11 puede ser menor que la extensión del Art. 12. Manda el servicio.');
+  vueloNotas.textContent = notas.join(' ');
+
+  const block = leerBlock(datos);
+  if (block === null) {
+    vueloChip.innerHTML = '';
+    despegueOut.innerHTML = '<p class="note center">Cargá el block time para calcular el último despegue.</p>';
+    return;
+  }
+
+  const u = ultimoDespegue(s.limiteArribo, block);
+  const avisos = [];
+  let estado = 'legal';
+  if (block > tope) {
+    estado = 'ilegal';
+    avisos.push(`El block time (${formatDuracion(block)} h) supera el tiempo de vuelo permitido (${formatDuracion(tope)} h).`);
+  }
+  if (u.salidaCalzos < s.presentacion) {
+    estado = 'ilegal';
+    avisos.push('El tramo no entra en el tiempo de servicio: la salida de calzos quedaría antes de la presentación.');
+  }
+  vueloChip.innerHTML = `${chip(estado)} `;
+  despegueOut.innerHTML = `
+    <div class="restante ${estado}">
+      <span>Último despegue a la base</span>
+      <b>${hora(u.despegue)}</b>
+    </div>
+    <div class="grid">
+      <div><span>Salida de calzos</span><b>${hora(u.salidaCalzos)}</b></div>
+      <div><span>Arribo a calzos</span><b>${hora(u.arribo)}</b></div>
+    </div>
+    ${avisos.map((a) => `<p class="note aviso">${a}</p>`).join('')}`;
 }
 
 function actualizar() {
@@ -141,6 +190,7 @@ function actualizar() {
 
 form.addEventListener('input', actualizar);
 form.addEventListener('change', actualizar);
+vueloSeccion.addEventListener('input', actualizar);
 
 form.querySelectorAll('button.now').forEach((b) => {
   b.addEventListener('click', () => {
