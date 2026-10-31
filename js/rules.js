@@ -116,13 +116,15 @@ export function maxVueloPiloto({ presentacion, pilotos, claseDescanso }) {
 export const TAXI_OUT = 10; // minutos que se suman al block time
 export const TAXI_IN = 10;
 
-// Último despegue para llegar dentro del último arribo permitido.
-// despegue + TAXI_OUT + block + TAXI_IN = último arribo permitido.
-// `limiteArribo` y `block` en minutos.
+// Último cierre de puertas y último despegue para llegar dentro del último arribo permitido.
+// cierre de puertas + TAXI_OUT + block + TAXI_IN = último arribo permitido;
+// despegue = cierre de puertas + TAXI_OUT. `limiteArribo` y `block` en minutos.
 export function ultimoDespegue(limiteArribo, block) {
   const total = TAXI_OUT + block + TAXI_IN;
+  const cierrePuertas = limiteArribo - total;
   return {
-    despegue: limiteArribo - total,
+    cierrePuertas,
+    despegue: cierrePuertas + TAXI_OUT,
     total,
     arribo: limiteArribo,
   };

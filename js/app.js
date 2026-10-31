@@ -163,18 +163,18 @@ function renderVuelo(r, datos) {
     estado = 'ilegal';
     avisos.push(`El block time (${formatDuracion(block)} h) supera el tiempo de vuelo permitido (${formatDuracion(tope)} h).`);
   }
-  if (u.despegue < s.presentacion) {
+  if (u.cierrePuertas < s.presentacion) {
     estado = 'ilegal';
-    avisos.push('El tramo no entra en el tiempo de servicio: el despegue quedaría antes de la presentación.');
+    avisos.push('El tramo no entra en el tiempo de servicio: el cierre de puertas quedaría antes de la presentación.');
   }
   vueloChip.innerHTML = `${chip(estado)} `;
   despegueOut.innerHTML = `
     <div class="restante ${estado}">
-      <span>Último despegue a la base</span>
-      <b>${hora(u.despegue)}</b>
+      <span>Último horario cierre de puertas</span>
+      <b>${hora(u.cierrePuertas)}</b>
     </div>
     <div class="grid">
-      <div><span>Block time + 20 min</span><b>${dur(u.total)}</b></div>
+      <div><span>Último despegue</span><b>${hora(u.despegue)}</b></div>
       <div><span>Último arribo permitido</span><b>${hora(u.arribo)}</b></div>
     </div>
     ${avisos.map((a) => `<p class="note aviso">${a}</p>`).join('')}`;
