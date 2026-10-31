@@ -49,6 +49,7 @@ body {
 
 .top {
   padding: 18px 16px 6px;
+  text-align: center;
 }
 .top h1 { margin: 0; font-size: 24px; line-height: 1.25; font-weight: 800; letter-spacing: -0.01em; text-wrap: balance; }
 .sub { margin: 4px 0 0; color: var(--muted); font-size: 14px; font-weight: 500; }
