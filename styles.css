@@ -50,8 +50,8 @@ body {
 .top {
   padding: 18px 16px 6px;
 }
-.top h1 { margin: 0; font-size: 26px; letter-spacing: -0.02em; }
-.sub { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+.top h1 { margin: 0; font-size: 21px; line-height: 1.3; font-weight: 800; letter-spacing: -0.01em; text-wrap: balance; }
+.sub { margin: 6px 0 0; color: var(--muted); font-size: 14px; font-weight: 600; }
 
 main { max-width: 560px; margin: 0 auto; padding: 8px 16px 40px; }
 
