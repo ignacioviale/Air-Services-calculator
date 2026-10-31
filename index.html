@@ -78,35 +78,6 @@
           <label><input type="radio" name="tcpAdicionales" value="2"><span>+2</span></label>
         </div>
       </div>
-
-      <details class="more">
-        <summary>Más datos (opcional)</summary>
-        <div class="only-piloto">
-          <div class="field">
-            <label for="tiempoVuelo">Tiempo de vuelo del servicio (h)</label>
-            <input type="number" inputmode="decimal" step="0.1" min="0" id="tiempoVuelo" name="tiempoVuelo" placeholder="ej. 7.5">
-          </div>
-          <div class="field">
-            <label for="trasladoFin">Fin de traslado como pasajero (Art. 13)</label>
-            <input type="time" id="trasladoFin" name="trasladoFin">
-          </div>
-          <div class="field">
-            <label for="horasMes">Horas de vuelo del mes, con este servicio</label>
-            <input type="number" inputmode="decimal" step="0.1" min="0" id="horasMes" name="horasMes" placeholder="máx. 120">
-          </div>
-          <div class="field">
-            <label for="horasAnio">Horas de vuelo del año, con este servicio</label>
-            <input type="number" inputmode="decimal" step="0.1" min="0" id="horasAnio" name="horasAnio" placeholder="máx. 1000">
-          </div>
-        </div>
-        <div class="only-tcp">
-          <div class="field">
-            <label for="asientos">Asientos aprobados del avión</label>
-            <input type="number" inputmode="numeric" min="0" id="asientos" name="asientos" placeholder="ej. 186">
-          </div>
-        </div>
-        <button type="button" id="limpiar" class="link">Borrar datos opcionales</button>
-      </details>
     </form>
 
     <section id="resultado" aria-live="polite"></section>

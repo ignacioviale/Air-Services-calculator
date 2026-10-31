@@ -144,7 +144,7 @@ form { display: grid; gap: 12px; }
 }
 .stepper output { flex: 1; text-align: center; font-size: 20px; font-weight: 700; }
 
-details.more, details.notes {
+details.notes {
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -156,15 +156,12 @@ details summary {
   font-weight: 600;
   color: var(--accent);
 }
-details.more .field { margin-bottom: 12px; }
-.link { border: 0; background: none; color: var(--muted); font: inherit; font-size: 13px; padding: 0 0 12px; text-decoration: underline; cursor: pointer; }
 
 body[data-rol="tcp"] .only-piloto,
 body[data-rol="piloto"] .only-tcp,
 body[data-tripulacion="minima"] .only-aumentada,
 body[data-tripulacion="aumentada"] .only-minima { display: none; }
 .only-piloto, .only-tcp { display: grid; gap: 12px; }
-details .only-piloto, details .only-tcp { gap: 0; }
 
 #resultado { display: grid; gap: 12px; margin: 18px 0; }
 

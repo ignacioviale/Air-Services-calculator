@@ -102,7 +102,6 @@ function render(r, datos) {
       <h2>${v.estado ? chip(v.estado) : ''} Tiempo de vuelo</h2>
       <div class="grid">
         <div><span>Máximo · ${v.fuente}</span><b class="sm">${maxTxt}</b></div>
-        ${v.tiempo != null ? `<div><span>Este servicio</span><b>${dur(v.tiempo)}</b></div>` : '<div><span>Este servicio</span><b class="sm muted">Cargalo en “Más datos”</b></div>'}
       </div>
       ${v.usaExtension ? `<p class="note">Usás la extensión del Art. 12: ${datos.pilotos === 3 ? 'hace falta un asiento reclinable de más de 40° en un área separada' : 'hace falta un espacio horizontal separado de los pasajeros'}.</p>` : ''}
       ${v.extendido && datos.pilotos === 3 ? '<p class="note">Ojo: el servicio máximo del Art. 11 puede ser menor que la extensión del Art. 12. Manda el servicio.</p>' : ''}
@@ -121,19 +120,6 @@ function render(r, datos) {
     <p class="note">Por Decreto: descanso mínimo desde calzas puestas: 10 hs.</p>
     <p class="note">Por Compañía: descanso mínimo desde calzas puestas: 12 hs.</p>
   </div>`;
-
-  if (esPiloto && r.acumulados && (r.acumulados.mes || r.acumulados.anio)) {
-    const a = r.acumulados;
-    html += `<div class="card"><h2>Acumulados de vuelo · Art. 8</h2><div class="grid">`;
-    if (a.mes) html += `<div><span>${chip(a.mes.estado)} Mes</span><b>${a.mes.horas}<small> / 120 h</small></b></div>`;
-    if (a.anio) html += `<div><span>${chip(a.anio.estado)} Año</span><b>${a.anio.horas}<small> / 1000 h</small></b></div>`;
-    html += `</div>${a.mes && a.mes.estado !== 'legal' ? '<p class="note">En el mes se puede exceder hasta un 10 % (132 h) solo por las causas del Art. 25.</p>' : ''}</div>`;
-  }
-
-  if (!esPiloto && r.tcpMinimos) {
-    html += `<div class="card"><h2>Tripulación mínima de cabina</h2>
-      <p class="note">${r.tcpMinimos} TCP para ${datos.asientos} asientos (1 cada 50 o fracción). Con +1 el servicio máximo sube a 16 h, y con +2 a 18 h.</p></div>`;
-  }
 
   if (r.estado === 'excepcion') {
     r.avisos.push('Solo es válido con una causa del Art. 25 (imprevistos, emergencias, búsqueda y salvamento o defensa). El comandante tiene que hacer un informe (Art. 26).');
@@ -172,13 +158,6 @@ form.querySelectorAll('[data-step]').forEach((b) => {
     segmentosOut.textContent = n === 7 ? '7+' : n;
     actualizar();
   });
-});
-
-document.getElementById('limpiar').addEventListener('click', () => {
-  ['tiempoVuelo', 'trasladoFin', 'horasMes', 'horasAnio', 'asientos'].forEach((id) => {
-    document.getElementById(id).value = '';
-  });
-  actualizar();
 });
 
 restaurar();
